@@ -22,6 +22,7 @@
 #define TLV_CODE_MAC_BASE       0x24
 #define TLV_CODE_MANUF_DATE     0x25
 #define TLV_CODE_DEVICE_VERSION 0x26
+#define TLV_CODE_PLATFORM_NAME  0x28
 #define TLV_CODE_MAC_SIZE       0x2A
 #define TLV_CODE_MANUF_NAME     0x2B
 #define TLV_CODE_MANUF_COUNTRY  0x2C
@@ -253,6 +254,9 @@ static void print_type_name(uint8_t type)
                 break;
         case TLV_CODE_DEVICE_VERSION:
                 printf("\tDevice Version: ");
+                break;
+        case TLV_CODE_PLATFORM_NAME:
+                printf("\tPlatform Name: ");
                 break;
         case TLV_CODE_MAC_SIZE:
                 printf("\tMAC Size: ");
