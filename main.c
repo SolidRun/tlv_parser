@@ -286,14 +286,23 @@ static void print_general(struct tlv_field *field)
 {
         uint8_t i, *ptr = (uint8_t *)&field->val;
 
-        print_type_name(field->type);
-
         for ( i = 0; i < field->len; i++) {
                 printf("%02x", *ptr++);
                 if ( i != 5)
                         printf(" ");
         }
         printf("\n");
+}
+
+static void print_string(struct tlv_field *field)
+{
+        uint8_t i, *ptr = (uint8_t *)&field->val;
+
+        for (i = 0; i < field->len; i++)
+                printf("%c", *ptr++);
+
+        printf("\n");
+
 }
 
 static void print_mac(struct tlv_field *field)
@@ -304,8 +313,6 @@ static void print_mac(struct tlv_field *field)
                 printf("Invalid MAC address, expected %u bytes, received %u\n", 6, field->len);
                 return;
         }
-
-        print_type_name(field->type);
 
         for ( i = 0; i < 6; i++) {
                 printf("%02x", *ptr++);
@@ -318,10 +325,29 @@ static void print_mac(struct tlv_field *field)
 
 static void print_field(struct tlv_field *field)
 {
-        if (field->type == TLV_CODE_MAC_BASE)
+        print_type_name(field->type);
+
+        switch (field->type) {
+
+        case TLV_CODE_MAC_BASE:
                 print_mac(field);
-        else
+                break;
+
+        case TLV_CODE_PRODUCT_NAME:
+        case TLV_CODE_SERIAL_NUMBER:
+        case TLV_CODE_PLATFORM_NAME:
+        case TLV_CODE_MANUF_COUNTRY:
+        case TLV_CODE_VENDOR_NAME:
+        case TLV_CODE_MANUF_NAME:
+        case TLV_CODE_PART_NUMBER:
+                print_string(field);
+                break;
+
+        default:
                 print_general(field);
+                break;
+
+        }
 }
 
 static void print_eeprom(void)
