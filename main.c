@@ -305,6 +305,16 @@ static void print_string(struct tlv_field *field)
 
 }
 
+static void print_u16(struct tlv_field *field)
+{
+        if (field->len != 2) {
+                printf("Invalid value size, expected %u bytes, not %u\n", 2, field->len);
+                return;
+        }
+
+        printf("%u\n", __builtin_bswap16(*(uint16_t *)&field->val));
+}
+
 static void print_mac(struct tlv_field *field)
 {
         uint8_t i, *ptr = (uint8_t *)&field->val;
@@ -341,6 +351,10 @@ static void print_field(struct tlv_field *field)
         case TLV_CODE_MANUF_NAME:
         case TLV_CODE_PART_NUMBER:
                 print_string(field);
+                break;
+
+        case TLV_CODE_MAC_SIZE:
+                print_u16(field);
                 break;
 
         default:
